@@ -1,0 +1,16 @@
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+client:
+  exchangeRates:
+    url: http://api.exchangeratesapi.io/v1
+    token: d370ffd97b514506749458d7ecbd775e
+
+feign:
+  okhttp:
+    enabled: true
+
+mongo:
+  dbname: conectionDb
+  urlconection: mongodb+srv://bruno_db:bruno_db@cluster0.79oo2.mongodb.net/conectionDb?retryWrites=true&w=majority
