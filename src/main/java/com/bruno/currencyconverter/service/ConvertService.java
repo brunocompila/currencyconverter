@@ -63,6 +63,7 @@ public class ConvertService {
     }
 
     public Flux<ConvertionTransaction> getConvertionTransactions(){
+
         return convertionRepository.findAll();
     }
 
