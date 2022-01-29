@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,11 +14,11 @@ import java.time.LocalDateTime;
 @Data
 @Scope(scopeName = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Document
-public class Convertion {
+public class ConvertionTransaction {
 
     @Id
     private String idTransaction;
-    private Long idUser;
+    private String idUser;
     private String originCurrency;
     private BigDecimal originValue;
     private String destinationCurrency;

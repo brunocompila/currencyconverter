@@ -1,14 +1,13 @@
 package com.bruno.currencyconverter.web.rest;
 
-import com.bruno.currencyconverter.domain.Convertion;
+import com.bruno.currencyconverter.domain.ConvertionTransaction;
 import com.bruno.currencyconverter.dto.ConverterRequestDto;
-import com.bruno.currencyconverter.dto.ConverterResponseDto;
 import com.bruno.currencyconverter.service.ConvertService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -24,7 +23,7 @@ public class CurrencyController {
     /**
      * POST /currency/convert : Service to convert currency
      *
-     * @param idUser  (required)
+     * @param converterRequestDto  (required)
      * @return Sucesso (status code 200)
      *         Bad Request (status code 400)
      *         Internal Error (status code 500)
@@ -41,11 +40,20 @@ public class CurrencyController {
             produces = { "application/json" }
     )
 
-    public ResponseEntity<Mono<Convertion>> converter(@RequestBody ConverterRequestDto converterRequestDto,
-                                                      @RequestHeader(required = true) final Long idUser){
+    public ResponseEntity<Mono<ConvertionTransaction>> converter(@RequestBody ConverterRequestDto converterRequestDto){
 
-        Mono<Convertion> convert = convertService.convert(converterRequestDto, idUser);
-        return new ResponseEntity<>(convert, HttpStatus.OK);
+        return new ResponseEntity<>(convertService.convert(converterRequestDto), HttpStatus.OK);
+
+    }
+
+
+    @PostMapping(
+            value = "/convertiontransactions",
+            produces = { "application/json" }
+    )
+    public ResponseEntity<Flux<ConvertionTransaction>> getConvertionTransactions(){
+
+        return new ResponseEntity<>(convertService.getConvertionTransactions(), HttpStatus.OK);
 
     }
 

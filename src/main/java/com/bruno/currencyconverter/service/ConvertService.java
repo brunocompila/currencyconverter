@@ -2,13 +2,14 @@ package com.bruno.currencyconverter.service;
 
 
 import com.bruno.currencyconverter.client.ExchangeRatesClient;
-import com.bruno.currencyconverter.domain.Convertion;
+import com.bruno.currencyconverter.domain.ConvertionTransaction;
 import com.bruno.currencyconverter.dto.ConverterRequestDto;
 import com.bruno.currencyconverter.dto.ExchangeRateResponseDto;
 import com.bruno.currencyconverter.repository.ConvertionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
@@ -25,18 +26,17 @@ public class ConvertService {
     private final ConvertionRepository convertionRepository;
     private final ExchangeRatesClient exchangeRatesClient;
 
-    public Mono<Convertion> convert(final ConverterRequestDto converterRequestDto, final Long userId) {
+    public Mono<ConvertionTransaction> convert(final ConverterRequestDto converterRequestDto) {
 
         final Mono<ExchangeRateResponseDto> exchangeRate = exchangeRatesClient.getExchangeRate(acessTokem);
 
-        return exchangeRate.flatMap(dto -> {
-            return getConvertionMono(dto, converterRequestDto);
-        });
-
+        return exchangeRate.flatMap(dto ->
+             getConvertionMono(dto, converterRequestDto)
+        );
     }
 
-    public Mono<Convertion> getConvertionMono(final ExchangeRateResponseDto exchangeRateResponseDto,
-                                               final ConverterRequestDto converterRequestDto) {
+    public Mono<ConvertionTransaction> getConvertionMono(final ExchangeRateResponseDto exchangeRateResponseDto,
+                                                         final ConverterRequestDto converterRequestDto) {
 
         final String originCurrency = converterRequestDto.getOriginCurrency().name();
         final String destinationCurrency = converterRequestDto.getDestinationCurrency().name();
@@ -49,7 +49,8 @@ public class ConvertService {
 
         final BigDecimal destinationValue = originValue.multiply(convertionRate);
 
-        Convertion convertion = Convertion.builder()
+        ConvertionTransaction convertion = ConvertionTransaction.builder()
+                .idUser(converterRequestDto.getIdUser())
                 .originCurrency(originCurrency)
                 .originValue(originValue)
                 .destinationCurrency(destinationCurrency)
@@ -59,6 +60,10 @@ public class ConvertService {
                 .build();
 
         return convertionRepository.save(convertion);
+    }
+
+    public Flux<ConvertionTransaction> getConvertionTransactions(){
+        return convertionRepository.findAll();
     }
 
 
