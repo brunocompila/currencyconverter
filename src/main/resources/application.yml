@@ -12,5 +12,5 @@ feign:
     enabled: true
 
 mongo:
-  dbname: conectionDb
-  urlconection: mongodb+srv://bruno_db:bruno_db@cluster0.79oo2.mongodb.net/conectionDb?retryWrites=true&w=majority
+  dbname: ${MONGO_DBNAME}
+  urlconection: ${MONGO_URLCONECTION}
