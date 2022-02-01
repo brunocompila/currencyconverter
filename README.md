@@ -1,11 +1,11 @@
 # Api for currency Services conversion 
 - contact: brunocompila@hotmail.com
 
-##Services Avaiable:
-####POST: /currency/conversions - Convert amoung currency
-####GET: /currency/conversions - list all conversions orders.
+## Services Avaiable:
+#### POST: /currency/conversions - Convert amoung currency
+#### GET: /currency/conversions - list all conversions orders.
 >
-##Technologies used:
+## Technologies used:
 - SpringWebFlux
 - Mongodb Reactive
 - Feign Reactor
@@ -14,6 +14,6 @@
 - Reactor Test
 >
 ## Application deployed 
-### - Documentation and services via url:
+- Documentation and services via url:
 ####
 #### https://currencyconverterbruno.herokuapp.com/swagger-ui.html
