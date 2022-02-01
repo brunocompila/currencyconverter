@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @Scope(scopeName = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Document
-public class ConvertionTransaction {
+public class ConversionTransaction {
 
     @Id
     private String idTransaction;

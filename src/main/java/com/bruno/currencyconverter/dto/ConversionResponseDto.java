@@ -8,23 +8,16 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class ConverterResponseDto {
+public class ConversionResponseDto {
 
-   //ID da transação
+
     private Long idTransaction;
-   //ID do usuário
     private Long idUser;
-    //Moeda origem
     private String sourceCurrency;
-    // Valor origem;
     private BigDecimal sourceValue;
-    //Moeda destino;
     private String destinationCurrency;
-    //Valor destino;
     private BigDecimal destinationValue;
-    //Taxa de conversão utilizada
     private BigDecimal convertionRate;
-    //Data/Hora UTC
     private LocalDateTime dateTime;
 
 }

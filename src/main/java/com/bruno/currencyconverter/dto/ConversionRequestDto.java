@@ -1,12 +1,14 @@
 package com.bruno.currencyconverter.dto;
 
 import com.bruno.currencyconverter.enums.CurrencyEnum;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-public class ConverterRequestDto {
+@Builder
+public class ConversionRequestDto {
 
     private String idUser;
     private CurrencyEnum originCurrency;
