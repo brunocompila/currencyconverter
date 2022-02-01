@@ -1,9 +1,17 @@
 package com.bruno.currencyconverter.web.rest;
 
-import com.bruno.currencyconverter.domain.ConvertionTransaction;
-import com.bruno.currencyconverter.dto.ConverterRequestDto;
-import com.bruno.currencyconverter.service.ConvertService;
+import com.bruno.currencyconverter.domain.ConversionTransaction;
+import com.bruno.currencyconverter.dto.ConversionRequestDto;
+import com.bruno.currencyconverter.exceptions.GlobalErrorAttributes;
+import com.bruno.currencyconverter.service.ConversionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,42 +24,47 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/currency")
 @RequiredArgsConstructor
+@Import(GlobalErrorAttributes.class)
 public class CurrencyController {
 
-    private final ConvertService convertService;
+    private final ConversionService convertService;
 
-    /**
-     * POST /currency/convert : Service to convert currency
-     *
-     * @param converterRequestDto  (required)
-     * @return Sucesso (status code 200)
-     *         Bad Request (status code 400)
-     *         Internal Error (status code 500)
-     */
-//
-//    @ApiResponse(value = "registro de Usuário", nickname = "userRegister", notes = "", response = UserRegisterResponse.class, tags={ "users", })
-//    @ApiResponses(value = {
-//
-//            @ApiResponse(code = 200, message = "Sucesso", response = CurrencyConverterResponse.class),
-//
-//            @ApiResponse(code = 400, message = "Bad Request", response = Error.class) })
+    @Operation(summary = "Convert a specific currency according to rates of conversion  ", tags = {"currency"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Conversion succesfull",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ConversionTransaction.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content)})
     @PostMapping(
-            value = "/convert",
-            produces = { "application/json" }
+            value = "/conversions",
+            produces = {"application/json"}
     )
 
-    public ResponseEntity<Mono<ConvertionTransaction>> converter(@RequestBody ConverterRequestDto converterRequestDto){
+    public ResponseEntity<Mono<ConversionTransaction>> converter(@RequestBody(required = true) ConversionRequestDto converterRequestDto) {
 
         return new ResponseEntity<>(convertService.convert(converterRequestDto), HttpStatus.OK);
 
     }
 
 
-    @PostMapping(
-            value = "/convertiontransactions",
-            produces = { "application/json" }
+    @Operation(summary = "Get a list of all Currency conversions", tags = {"currency"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfull",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema( implementation =
+                                    ConversionTransaction.class)))}),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content)})
+    @GetMapping(
+            value = "/conversions",
+            produces = {"application/json"}
     )
-    public ResponseEntity<Flux<ConvertionTransaction>> getConvertionTransactions(){
+    public ResponseEntity<Flux<ConversionTransaction>> getConvertionTransactions() {
 
         return new ResponseEntity<>(convertService.getConvertionTransactions(), HttpStatus.OK);
 
